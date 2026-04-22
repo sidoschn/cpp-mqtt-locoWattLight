@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(cpp-mqtt CXX)
+project(cpp-mqtt-locoWattLight CXX)
 
 find_package(Git QUIET)
 if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
@@ -42,8 +42,8 @@ find_package(Threads)
 find_package(PahoMqttC)
 find_package(OpenSSL)
 
-add_executable(cpp-mqtt main.cpp)
-target_link_libraries( cpp-mqtt 
+add_executable(locoWattLight main2.cpp)
+target_link_libraries( locoWattLight 
         ${CMAKE_THREAD_LIBS_INIT}
         ${PROJECT_SOURCE_DIR}/build/paho.mqtt.cpp/src/libpaho-mqttpp3.a
         ${PROJECT_SOURCE_DIR}/build/paho.mqtt.c/src/libpaho-mqtt3as.a
