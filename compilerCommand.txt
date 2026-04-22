@@ -1,0 +1,14 @@
+clang++ main.cpp -o locoWattLight
+
+cmake -S ./ -B ./build -G Ninja
+cmake -S ./ -B ./build -G Ninja
+
+cmake  --build ./build --target all --
+
+openssl infos:
+/usr/lib/ssl
+
+(add this to .bashrc)
+export OPENSSL_ROOT_DIR="/usr/lib/ssl"
+
+!do not forget to "apt install libssl-dev"!
