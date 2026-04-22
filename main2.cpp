@@ -88,12 +88,12 @@ int main()
     connOpts.set_clean_session(true);
     
 
-    std::cout << "Hello, 6 World!" << std::endl;
+    std::cout << "Hello, 7 World!" << std::endl;
     int publishResult;
 
-    publishResult = publishAMessage(client, connOpts, "super");
+    publishResult = publishAMessage(client, connOpts, "testMessage1");
 
-    publishResult = publishAMessage(client, connOpts, "duper");
+    publishResult = publishAMessage(client, connOpts, "testMessage2");
     // try {
     //     // Connect to EMQX broker
     //     client.connect(connOpts)->wait();

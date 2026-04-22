@@ -12,3 +12,5 @@ openssl infos:
 export OPENSSL_ROOT_DIR="/usr/lib/ssl"
 
 !do not forget to "apt install libssl-dev"!
+
+on vscode ssh connection issues: in user directors (e.g. /home/admin) delete .vscode-server/ folder tree (rm -rf .vscode-server/) (maybe add it to bashrc? seems to happen every reboot)
