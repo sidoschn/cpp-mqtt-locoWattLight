@@ -53,6 +53,6 @@ target_link_libraries( locoWattLight
         )
 
 add_custom_command(
-            TARGET cpp-mqtt POST_BUILD
+            TARGET locoWattLight POST_BUILD
             COMMAND openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=localhost" -keyout tls.key  -out tls.crt
             VERBATIM)        
