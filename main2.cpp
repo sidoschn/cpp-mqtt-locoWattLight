@@ -2,7 +2,10 @@
 #include "mqtt/async_client.h"
 #include <string>
 #include <thread>
+#include <fstream>
 #include <chrono>
+#include "HTML.h"
+#include "httplib.h"
 
 const std::string SERVER_ADDRESS("tcp://192.168.0.39:1883");
 const std::string CLIENT_ID("cpp_publisher");
@@ -78,22 +81,59 @@ int publishAMessage(mqtt::async_client& client, mqtt::connect_options& connOpts,
     }
 }
 
+
+
 int main()
 {
+    httplib::Server svr;
+    // std::ofstream fileStream;
+    std::string deviceId = "noDevice";
+    std::string SoC = "0";
+    std::string pvPower = "0";
+    
+    // fileStream.open("newHtml.htm");
 
-    mqtt::async_client client(SERVER_ADDRESS, CLIENT_ID);
+    HTML::Document htmlDoc("TitleMessage");
+    std::string htmlString;
+    htmlDoc.addAttribute("lang", "en");
 
-    mqtt::connect_options connOpts;
-    connOpts.set_keep_alive_interval(20);
-    connOpts.set_clean_session(true);
+    htmlDoc << HTML::Header2("Listening to Device: "+ deviceId) << HTML::Break();
+
+
+
+    htmlDoc << (HTML::Table()
+            <<  (HTML::Row() <<  HTML::ColHeader("SOC")   << HTML::ColHeader("PvPower"))
+            <<  (HTML::Row() <<  HTML::Col(SoC)           << HTML::Col(pvPower)));
+
+
+    std::cout << htmlDoc;
+
+    // fileStream << htmlDoc;
+    // fileStream.close();
+    htmlString = htmlDoc;
+    
+    svr.Get("/hi", [&htmlDoc](const httplib::Request&, httplib::Response& res) {
+        res.set_content(htmlDoc, "text/html");
+        });
+
+    svr.listen("0.0.0.0", 8234);
+    
+    // mqtt::async_client client(SERVER_ADDRESS, CLIENT_ID);
+
+    // mqtt::connect_options connOpts;
+    // connOpts.set_keep_alive_interval(20);
+    // connOpts.set_clean_session(true);
     
 
-    std::cout << "Hello, 8 World!" << std::endl;
-    int publishResult;
+    // std::cout << "Hello, 8 World!" << std::endl;
+    // int publishResult;
 
-    publishResult = publishAMessage(client, connOpts, "testMessage1");
+    // publishResult = publishAMessage(client, connOpts, "testMessage1");
 
-    publishResult = publishAMessage(client, connOpts, "testMessage2");
+    // publishResult = publishAMessage(client, connOpts, "testMessage2");
+    
+    
+    
     // try {
     //     // Connect to EMQX broker
     //     client.connect(connOpts)->wait();
