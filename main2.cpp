@@ -163,7 +163,7 @@ class callback : public virtual mqtt::callback, public virtual mqtt::iaction_lis
             std::cout << jsonData["data"]["bms_soc"];
 
             SOC = nlohmann::to_string(jsonData["data"]["bms_soc"]);
-            PVPOWER = nlohmann::to_string(jsonData["data"]["pvpowerin"]);
+            PVPOWER = std::to_string((jsonData["data"]["pvpowerin"])/10.0);
             for (auto& el : jsonData.items()) {
             std::cout << el.key() << " : " << el.value() << "\n";
             }
