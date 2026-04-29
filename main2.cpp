@@ -115,10 +115,13 @@ int main()
     svr.Get("/hi", [&htmlDoc](const httplib::Request&, httplib::Response& res) {
         res.set_content(htmlDoc, "text/html");
         });
+    
 
-    svr.Get("/stop", [&htmlDoc](const httplib::Request&, httplib::Response& res) {
+        
+    svr.Get("/stop", [&svr](const httplib::Request&, httplib::Response& res) {
         std::cout << "stopping server";
-        return 0;
+        svr.stop();
+
         });
 
     svr.listen("0.0.0.0", 8234);
