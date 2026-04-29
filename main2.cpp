@@ -7,17 +7,21 @@
 #include "HTML.h"
 #include "httplib.h"
 #include <vector>
+#include "json.hpp"
+
 
 const std::string SERVER_ADDRESS("tcp://192.168.0.39:1883");
 const std::string DFLT_SERVER_URI("mqtt://192.168.39:1883");
 const std::string CLIENT_ID("cpp_publisher");
 const std::string TOPIC("cppTest/testTopic");
-const std::string SUBTOPIC("cppTest/testTopic/set");
+// const std::string SUBTOPIC("cppTest/testTopic/set"); // legacy, the subtopics are populated in Main
 std::vector<std::string> SUBTOPICS;
 std::vector<std::string> PUBTOPICS;
 //HTML::Document GLOBALHTMLDOC;
 HTML::Document MAINPAGE;
 std::string SMAINPAGE;
+
+const std::string DEVICETOWATCH = "DLP0DYT037";
 
 const int QOS = 1;
 const int N_RETRY_ATTEMPTS = 5;
@@ -150,7 +154,18 @@ class callback : public virtual mqtt::callback, public virtual mqtt::iaction_lis
         
         if (recTopic.compare(SUBTOPICS[0]) == 0)
         {
-            SOC = msg->get_payload();
+            std::string jsonString = msg->get_payload();
+            
+            nlohmann::json jsonData = nlohmann::json::parse(jsonString);
+            //JS::ParseContext context(jsonString);
+
+            //JsonObject obj;
+
+            for (auto& el : jsonData.items()) {
+            std::cout << el.key() << " : " << el.value() << "\n";
+            }
+
+
             SMAINPAGE = generateHtmlDoc();
         }
 
@@ -264,7 +279,7 @@ int main()
     mqtt::async_client cli(DFLT_SERVER_URI, CLIENT_ID);
     mqtt::connect_options connOpts;
     connOpts.set_clean_session(false);
-    SUBTOPICS.push_back("cppTest/testTopic/set");
+    SUBTOPICS.push_back("energy/growatt/DLP0DYT037");
     SUBTOPICS.push_back("cppTest/testTopic2/set");
 
     callback cb(cli, connOpts);
