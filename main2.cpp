@@ -156,12 +156,12 @@ class callback : public virtual mqtt::callback, public virtual mqtt::iaction_lis
         {
             std::string jsonString = msg->get_payload();
             
-            nlohmann::json jsonMsg = nlohmann::json::parse(jsonString);
+            nlohmann::json jsonData = nlohmann::json::parse(jsonString);
             //JS::ParseContext context(jsonString);
-            nlohmann::json jsonData = nlohmann::json::parse(jsonMsg["data"]);
+            //nlohmann::json jsonData = nlohmann::json::parse(jsonMsg["data"]);
             //JsonObject obj;
-            SOC = jsonData["bms_soc"];
-            PVPOWER = jsonData["pvpowerin"];
+            SOC = jsonData["data"]["bms_soc"];
+            PVPOWER = jsonData["data"]["pvpowerin"];
             for (auto& el : jsonData.items()) {
             std::cout << el.key() << " : " << el.value() << "\n";
             }
