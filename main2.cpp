@@ -164,7 +164,8 @@ class callback : public virtual mqtt::callback, public virtual mqtt::iaction_lis
 
             SOC = nlohmann::to_string(jsonData["data"]["bms_soc"]);
             PVPOWER = std::to_string(std::stod(nlohmann::to_string(jsonData["data"]["pvpowerin"])) /10.0);
-            for (auto& el : jsonData.items()) {
+            DEVICEID_MONITORED = jsonData["device"];
+            for (auto& el : jsonData["data"].items()) {
             std::cout << el.key() << " : " << el.value() << "\n";
             }
 
