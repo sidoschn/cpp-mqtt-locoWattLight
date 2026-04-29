@@ -151,7 +151,7 @@ class callback : public virtual mqtt::callback, public virtual mqtt::iaction_lis
         if (recTopic.compare(SUBTOPICS[0]) == 0)
         {
             SOC = msg->get_payload();
-            generateHtmlDoc();
+            SMAINPAGE = generateHtmlDoc();
         }
 
     }
@@ -254,12 +254,6 @@ int publishAMessage(mqtt::async_client& client, mqtt::connect_options& connOpts,
         std::cerr << "Error: " << exc.what() << std::endl;
         return 1;
     }
-}
-
-
-const httplib::Request& respondToHi(const httplib::Request&, httplib::Response& res){
-    res.set_content(SMAINPAGE, "text/html");
-
 }
 
 
