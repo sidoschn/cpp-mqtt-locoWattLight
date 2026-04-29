@@ -158,7 +158,7 @@ class callback : public virtual mqtt::callback, public virtual mqtt::iaction_lis
             
             nlohmann::json jsonMsg = nlohmann::json::parse(jsonString);
             //JS::ParseContext context(jsonString);
-            nlohmann::json jsonData = jsonMsg["data"];
+            nlohmann::json jsonData = nlohmann::json::parse(jsonMsg["data"]);
             //JsonObject obj;
             SOC = jsonData["bms_soc"];
             PVPOWER = jsonData["pvpowerin"];
