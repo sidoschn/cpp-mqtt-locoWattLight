@@ -6,12 +6,16 @@
 #include <chrono>
 #include "HTML.h"
 #include "httplib.h"
+#include <vector>
 
 const std::string SERVER_ADDRESS("tcp://192.168.0.39:1883");
 const std::string DFLT_SERVER_URI("mqtt://192.168.39:1883");
 const std::string CLIENT_ID("cpp_publisher");
 const std::string TOPIC("cppTest/testTopic");
 const std::string SUBTOPIC("cppTest/testTopic/set");
+std::vector<std::string> SUBTOPICS;
+std::vector<std::string> PUBTOPICS;
+
 
 const int QOS = 1;
 const int N_RETRY_ATTEMPTS = 5;
@@ -109,8 +113,9 @@ class callback : public virtual mqtt::callback, public virtual mqtt::iaction_lis
                   << "\tfor client " << CLIENT_ID << " using QoS" << QOS << "\n"
                   << "\nPress Q<Enter> to quit\n"
                   << std::endl;
-
-        cli_.subscribe(SUBTOPIC, QOS, nullptr, subListener_);
+        for (auto &subtop : SUBTOPICS){
+        cli_.subscribe(subtop, QOS, nullptr, subListener_);
+        }
     }
 
     // Callback for when the connection is lost.
@@ -222,10 +227,12 @@ int publishAMessage(mqtt::async_client& client, mqtt::connect_options& connOpts,
 int main()
 {
     // mqtt stuff init
+
     mqtt::async_client cli(DFLT_SERVER_URI, CLIENT_ID);
     mqtt::connect_options connOpts;
     connOpts.set_clean_session(false);
-    
+    SUBTOPICS.push_back("cppTest/testTopic/set");
+    SUBTOPICS.push_back("cppTest/testTopic2/set");
 
     //webserver stuff init
     httplib::Server svr;
@@ -279,6 +286,7 @@ int main()
                   << std::endl;
         return 1;
     }
+    
 
     svr.listen("0.0.0.0", 8234);
     
