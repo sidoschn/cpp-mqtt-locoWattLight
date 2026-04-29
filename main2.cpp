@@ -15,11 +15,17 @@ const std::string TOPIC("cppTest/testTopic");
 const std::string SUBTOPIC("cppTest/testTopic/set");
 std::vector<std::string> SUBTOPICS;
 std::vector<std::string> PUBTOPICS;
-
+//HTML::Document GLOBALHTMLDOC;
+HTML::Document MAINPAGE;
+std::string SMAINPAGE;
 
 const int QOS = 1;
 const int N_RETRY_ATTEMPTS = 5;
 
+
+std::string DEVICEID_MONITORED = "noDevice";
+std::string SOC = "0";
+std::string PVPOWER = "0";
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -73,6 +79,8 @@ class callback : public virtual mqtt::callback, public virtual mqtt::iaction_lis
     mqtt::connect_options& connOpts_;
     // An action listener to display the result of actions.
     action_listener subListener_;
+    
+    
 
     // This deomonstrates manually reconnecting to the broker by calling
     // connect() again. This is a possibility for an application that keeps
@@ -137,6 +145,15 @@ class callback : public virtual mqtt::callback, public virtual mqtt::iaction_lis
         std::cout << "Message arrived" << std::endl;
         std::cout << "\ttopic: '" << msg->get_topic() << "'" << std::endl;
         std::cout << "\tpayload: '" << msg->to_string() << "'\n" << std::endl;
+
+        std::string recTopic = msg->get_topic();
+        
+        if (recTopic.compare(SUBTOPICS[0]) == 0)
+        {
+            SOC = msg->get_payload();
+            generateHtmlDoc();
+        }
+
     }
 
     void delivery_complete(mqtt::delivery_token_ptr token) override {}
@@ -145,6 +162,23 @@ public:
     callback(mqtt::async_client& cli, mqtt::connect_options& connOpts)
         : nretry_(0), cli_(cli), connOpts_(connOpts), subListener_("Subscription")
     {
+    }
+
+    std::string generateHtmlDoc(){
+        HTML::Document htmlDoc("TitleMessage");
+        std::string htmlString;
+        htmlDoc.addAttribute("lang", "en");
+
+        htmlDoc << HTML::Header2("Listening to Device: "+ DEVICEID_MONITORED) << HTML::Break();
+
+
+
+        htmlDoc << (HTML::Table()
+                <<  (HTML::Row() <<  HTML::ColHeader("SOC")   << HTML::ColHeader("PvPower"))
+                <<  (HTML::Row() <<  HTML::Col(SOC)           << HTML::Col(PVPOWER)));
+        htmlString = htmlDoc;
+        return htmlString;
+        
     }
 };
 
@@ -223,6 +257,11 @@ int publishAMessage(mqtt::async_client& client, mqtt::connect_options& connOpts,
 }
 
 
+const httplib::Request& respondToHi(const httplib::Request&, httplib::Response& res){
+    res.set_content(SMAINPAGE, "text/html");
+
+}
+
 
 int main()
 {
@@ -234,38 +273,47 @@ int main()
     SUBTOPICS.push_back("cppTest/testTopic/set");
     SUBTOPICS.push_back("cppTest/testTopic2/set");
 
+    callback cb(cli, connOpts);
+
+
     //webserver stuff init
     httplib::Server svr;
     // std::ofstream fileStream;
-    std::string deviceId = "noDevice";
-    std::string SoC = "0";
-    std::string pvPower = "0";
+    
     
     // fileStream.open("newHtml.htm");
+    
+    // generate a simple HTML doc to show on /hi request
+    SMAINPAGE = cb.generateHtmlDoc();
 
-    HTML::Document htmlDoc("TitleMessage");
-    std::string htmlString;
-    htmlDoc.addAttribute("lang", "en");
+    // HTML::Document htmlDoc("TitleMessage");
+    // std::string htmlString;
+    // htmlDoc.addAttribute("lang", "en");
 
-    htmlDoc << HTML::Header2("Listening to Device: "+ deviceId) << HTML::Break();
-
-
-
-    htmlDoc << (HTML::Table()
-            <<  (HTML::Row() <<  HTML::ColHeader("SOC")   << HTML::ColHeader("PvPower"))
-            <<  (HTML::Row() <<  HTML::Col(SoC)           << HTML::Col(pvPower)));
+    // htmlDoc << HTML::Header2("Listening to Device: "+ deviceId) << HTML::Break();
 
 
-    std::cout << htmlDoc;
+
+    // htmlDoc << (HTML::Table()
+    //         <<  (HTML::Row() <<  HTML::ColHeader("SOC")   << HTML::ColHeader("PvPower"))
+    //         <<  (HTML::Row() <<  HTML::Col(SoC)           << HTML::Col(pvPower)));
+
+
+    // std::cout << htmlDoc;
 
     // fileStream << htmlDoc;
     // fileStream.close();
-    htmlString = htmlDoc;
+    // htmlString = htmlDoc;
     
-    svr.Get("/hi", [&htmlDoc](const httplib::Request&, httplib::Response& res) {
-        res.set_content(htmlDoc, "text/html");
+    svr.Get("/hi", [](const httplib::Request&, httplib::Response& res) {
+        res.set_content(SMAINPAGE, "text/html");
         });
+    httplib::Server::Handler serverHandler;
+
     
+
+    
+    svr.Get("/hi", serverHandler);
 
         
     svr.Get("/stop", [&svr](const httplib::Request&, httplib::Response& res) {
@@ -275,7 +323,7 @@ int main()
         });
 
     //setting mqtt callbacks and connecting to broker
-    callback cb(cli, connOpts);
+    
     cli.set_callback(cb);
     try {
         std::cout << "Connecting to the MQTT server '" << DFLT_SERVER_URI << "'..." << std::flush;
