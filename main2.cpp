@@ -116,6 +116,11 @@ int main()
         res.set_content(htmlDoc, "text/html");
         });
 
+    svr.Get("/stop", [&htmlDoc](const httplib::Request&, httplib::Response& res) {
+        std::cout << "stopping server";
+        return 0;
+        });
+
     svr.listen("0.0.0.0", 8234);
     
     // mqtt::async_client client(SERVER_ADDRESS, CLIENT_ID);
