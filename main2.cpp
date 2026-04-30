@@ -10,7 +10,7 @@
 #include "json.hpp"
 
 
-const int WEBSERVERPORT(80);
+const int WEBSERVERPORT(8234);
 const std::string DFLT_SERVER_URI("mqtt://192.168.39:1883");
 const std::string CLIENT_ID("cpp_publisher");
 const std::string TOPIC("cppTest/testTopic");
@@ -349,7 +349,7 @@ int main()
     }
     
 
-    svr.listen("0.0.0.0", WEBSERVERPORT);
+    svr.listen("0.0.0.0", );
     
     // mqtt::async_client client(SERVER_ADDRESS, CLIENT_ID);
 
