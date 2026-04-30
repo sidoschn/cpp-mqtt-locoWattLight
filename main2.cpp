@@ -232,6 +232,23 @@ int publishAMessage(mqtt::async_client& client, mqtt::connect_options& connOpts,
 }
 
 
+struct my_Requesthandler{
+
+    void operator()(const httplib::Request& req, httplib::Response& res){
+        std::cout << "hi request received";
+        res.set_content("oh, hi there", "text/plain");
+    }
+
+};
+
+
+void myRequestfunction(const httplib::Request& req, httplib::Response& res){
+        std::cout << "hi request received";
+        res.set_content("oh, hi there", "text/plain");
+    }
+
+
+
 int main()
 {
     // mqtt stuff init
@@ -282,14 +299,13 @@ int main()
         std::cout << req.path << std::endl;
 
         });
-    httplib::Server::Handler serverHandler;
 
+    httplib::Request req;
+    httplib::Response res;
+    my_Requesthandler myHandler;
+    svr.Get("/hi", myHandler);
+    svr.Get("/hi2", &myRequestfunction);
     
-
-    
-    svr.Get("/hi", serverHandler);
-
-        
     svr.Get("/stop", [&svr](const httplib::Request&, httplib::Response& res) {
         std::cout << "stopping server" << std::endl;
         svr.stop();
