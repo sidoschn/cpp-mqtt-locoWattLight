@@ -21,7 +21,7 @@ std::vector<std::string> PUBTOPICS;
 HTML::Document MAINPAGE;
 std::string SMAINPAGE;
 int LOCALPORT;
-std::string LOCALADDR;
+std::string SERVER_CURRENT_LOCALADDR;
 
 const std::string DEVICETOWATCH = "DLP0DYT037";
 
@@ -198,7 +198,7 @@ public:
                 <<  (HTML::Row() <<  HTML::ColHeader("SOC")   << HTML::ColHeader("PvPower"))
                 <<  (HTML::Row() <<  HTML::Col(SOC)           << HTML::Col(PVPOWER)));
         htmlDoc << HTML::Break() << HTML::Break();
-        htmlDoc << HTML::Link("Stop Server", LOCALADDR+"stop").title("Klick here to stop the Webserver");
+        htmlDoc << HTML::Link("Stop Server", "" + SERVER_CURRENT_LOCALADDR + "stop").title("Klick here to stop the Webserver");
         htmlString = htmlDoc;
         return htmlString;
         
@@ -276,10 +276,11 @@ int main()
     
     svr.Get("/", [](const httplib::Request& req, httplib::Response& res) {
         res.set_content(SMAINPAGE, "text/html");
-        LOCALADDR = req.local_addr;
-        std::cout << LOCALADDR;
+        SERVER_CURRENT_LOCALADDR = req.local_addr;
+        std::cout << SERVER_CURRENT_LOCALADDR << std::endl;
         
-        std::cout << req.path;
+        std::cout << req.path << std::endl;
+
         });
     httplib::Server::Handler serverHandler;
 
