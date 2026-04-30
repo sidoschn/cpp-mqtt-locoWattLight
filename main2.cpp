@@ -86,7 +86,7 @@ class callback : public virtual mqtt::callback, public virtual mqtt::iaction_lis
     // An action listener to display the result of actions.
     action_listener subListener_;
     
-    
+    std::map<std::string , std::string> monitoredVariables;
 
     // This deomonstrates manually reconnecting to the broker by calling
     // connect() again. This is a possibility for an application that keeps
@@ -192,11 +192,16 @@ public:
 
         htmlDoc << HTML::Header2("Listening to Device: "+ DEVICEID_MONITORED) << HTML::Break();
 
+        // !! hier dynamisch die Übersicht generieren
+
+        htmlDoc << HTML::Table();
+
+        for(auto variable: monitoredVariables){
+            htmlDoc << (HTML::Row() <<  HTML::ColHeader(variable.first)   << HTML::Col(variable.second));
+        }
 
 
-        htmlDoc << (HTML::Table()
-                <<  (HTML::Row() <<  HTML::ColHeader("SOC")   << HTML::ColHeader("PvPower"))
-                <<  (HTML::Row() <<  HTML::Col(SOC)           << HTML::Col(PVPOWER)));
+                
         htmlDoc << HTML::Break() << HTML::Break();
         htmlDoc << HTML::Link("Stop Server", "stop").title("Klick here to stop the Webserver");
         htmlString = htmlDoc;
