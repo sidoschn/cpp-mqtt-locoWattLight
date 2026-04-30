@@ -198,7 +198,7 @@ public:
                 <<  (HTML::Row() <<  HTML::ColHeader("SOC")   << HTML::ColHeader("PvPower"))
                 <<  (HTML::Row() <<  HTML::Col(SOC)           << HTML::Col(PVPOWER)));
         htmlDoc << HTML::Break() << HTML::Break();
-        htmlDoc << HTML::Link("Stop Server", "" + SERVER_CURRENT_LOCALADDR + "stop").title("Klick here to stop the Webserver");
+        htmlDoc << HTML::Link("Stop Server", "stop").title("Klick here to stop the Webserver");
         htmlString = htmlDoc;
         return htmlString;
         
