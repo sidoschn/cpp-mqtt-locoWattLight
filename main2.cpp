@@ -150,7 +150,7 @@ class callback : public virtual mqtt::callback, public virtual mqtt::iaction_lis
     {
         std::cout << "Message arrived" << std::endl;
         std::cout << "\ttopic: '" << msg->get_topic() << "'" << std::endl;
-        std::cout << "\tpayload: '" << msg->to_string() << "'\n" << std::endl;
+        //std::cout << "\tpayload: '" << msg->to_string() << "'\n" << std::endl;
 
         std::string recTopic = msg->get_topic();
         
@@ -198,7 +198,7 @@ public:
                 <<  (HTML::Row() <<  HTML::ColHeader("SOC")   << HTML::ColHeader("PvPower"))
                 <<  (HTML::Row() <<  HTML::Col(SOC)           << HTML::Col(PVPOWER)));
         htmlDoc << HTML::Break() << HTML::Break();
-        htmlDoc << HTML::Link("Stop Server", LOCALADDR+":"+std::to_string(WEBSERVERPORT)+"/stop").title("Klick here to stop the Webserver");
+        htmlDoc << HTML::Link("Stop Server", LOCALADDR+"stop").title("Klick here to stop the Webserver");
         htmlString = htmlDoc;
         return htmlString;
         
