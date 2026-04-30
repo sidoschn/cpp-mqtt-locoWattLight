@@ -20,6 +20,8 @@ std::vector<std::string> PUBTOPICS;
 //HTML::Document GLOBALHTMLDOC;
 HTML::Document MAINPAGE;
 std::string SMAINPAGE;
+int LOCALPORT;
+std::string LOCALADDR;
 
 const std::string DEVICETOWATCH = "DLP0DYT037";
 
@@ -165,9 +167,9 @@ class callback : public virtual mqtt::callback, public virtual mqtt::iaction_lis
             SOC = nlohmann::to_string(jsonData["data"]["bms_soc"]);
             PVPOWER = std::to_string(std::stod(nlohmann::to_string(jsonData["data"]["pvpowerin"])) /10.0);
             DEVICEID_MONITORED = jsonData["device"];
-            for (auto& el : jsonData["data"].items()) {
-            std::cout << el.key() << " : " << el.value() << "\n";
-            }
+            // for (auto& el : jsonData["data"].items()) {
+            // std::cout << el.key() << " : " << el.value() << "\n";
+            // }
 
 
             SMAINPAGE = generateHtmlDoc();
@@ -196,7 +198,7 @@ public:
                 <<  (HTML::Row() <<  HTML::ColHeader("SOC")   << HTML::ColHeader("PvPower"))
                 <<  (HTML::Row() <<  HTML::Col(SOC)           << HTML::Col(PVPOWER)));
         htmlDoc << HTML::Break() << HTML::Break();
-        htmlDoc << HTML::Link("Stop Server", "HTTP://127.0.0.1"+std::to_string(WEBSERVERPORT)+"/stop").title("Klick here to stop the Webserver");
+        htmlDoc << HTML::Link("Stop Server", LOCALADDR+":"+std::to_string(WEBSERVERPORT)+"/stop").title("Klick here to stop the Webserver");
         htmlString = htmlDoc;
         return htmlString;
         
@@ -205,54 +207,6 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////
 
-
-// class mqttPublisher{
-//     std::string brokerAddress;
-//     std::string clientId;
-//     mqtt::connect_options connOpts;
-//     mqtt::async_client client;
-
-//     public:
-//         mqttPublisher(std::string bA, std::string cI, int keepAliveInterval, bool bSetCleanSession){  //constructor
-//             brokerAddress= bA;
-//             clientId = cI;
-//             connOpts.set_keep_alive_interval(keepAliveInterval);
-//             connOpts.set_clean_session(bSetCleanSession);
-            
-//         }
-
-//     void init(){
-//         //mqtt::async_client clientt(brokerAddress, clientId);
-//         client.
-//     }
-
-//     int publish(std::string topic, std::string payloadToPublish){
-//         try {
-//         // Connect to broker
-//         client.connect(connOpts)->wait();
-//         std::cout << "Connected to broker" << std::endl;
-
-//         // Publish a message
-//         //std::string payload = "Hello, EMQX from C++!";
-
-//         mqtt::message_ptr pubmsg = mqtt::make_message(topic, payloadToPublish, 1, false);
-//         client.publish(pubmsg)->wait();
-//         std::cout << "Message published: " << payload << std::endl;
-
-//         // Disconnect
-//         client.disconnect()->wait();
-//         std::cout << "Disconnected" << std::endl;
-//         } catch (const mqtt::exception& exc) {
-//         std::cerr << "Error: " << exc.what() << std::endl;
-//         return 1;
-//         }
-//         return 0;
-
-//     }
-
-// };
-
-// self written classes::
 
 int publishAMessage(mqtt::async_client& client, mqtt::connect_options& connOpts, std::string payload)
 {
@@ -320,8 +274,12 @@ int main()
     // fileStream.close();
     // htmlString = htmlDoc;
     
-    svr.Get("/", [](const httplib::Request&, httplib::Response& res) {
+    svr.Get("/", [](const httplib::Request& req, httplib::Response& res) {
         res.set_content(SMAINPAGE, "text/html");
+        LOCALADDR = req.local_addr;
+        std::cout << LOCALADDR;
+        
+        std::cout << req.path;
         });
     httplib::Server::Handler serverHandler;
 
@@ -352,6 +310,7 @@ int main()
     
 
     svr.listen("0.0.0.0", WEBSERVERPORT);
+    
     
     
     // mqtt::async_client client(SERVER_ADDRESS, CLIENT_ID);
