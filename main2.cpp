@@ -195,9 +195,9 @@ public:
         htmlDoc << (HTML::Table()
                 <<  (HTML::Row() <<  HTML::ColHeader("SOC")   << HTML::ColHeader("PvPower"))
                 <<  (HTML::Row() <<  HTML::Col(SOC)           << HTML::Col(PVPOWER)));
-        htmlString = htmlDoc;
         htmlDoc << HTML::Break() << HTML::Break();
-        htmlDoc << (HTML::ListItem() << HTML::Link("Stop Server", "HTTP://127.0.0.1"+std::to_string(WEBSERVERPORT)+"/stop").title("Klick here to stop the Webserver"));
+        htmlDoc << HTML::Link("Stop Server", "HTTP://127.0.0.1"+std::to_string(WEBSERVERPORT)+"/stop").title("Klick here to stop the Webserver");
+        htmlString = htmlDoc;
         return htmlString;
         
     }
