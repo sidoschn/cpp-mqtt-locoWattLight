@@ -27,7 +27,7 @@ set(PAHO_ENABLE_TESTING FALSE)
 set(PAHO_MQTT_C_LIBRARIES "${PROJECT_SOURCE_DIR}/build/paho.mqtt.c/src")
 set(PAHO_MQTT_C_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/paho.mqtt.c/src")
 
-include_directories("paho.mqtt.c/src" "paho.mqtt.cpp/src")
+include_directories("paho.mqtt.c/src" "paho.mqtt.cpp/src" "/usr/local/include/Wt")
 
 link_directories(   "${PROJECT_SOURCE_DIR}/build/paho.mqtt.cpp/src"
                     "${PROJECT_SOURCE_DIR}/build/paho.mqtt.c/src"
@@ -41,7 +41,7 @@ add_subdirectory(paho.mqtt.cpp)
 find_package(Threads)
 find_package(PahoMqttC)
 find_package(OpenSSL)
-find_package(WT COMPONENTS wt REQUIRED)
+
 
 add_executable(locoWattLight test02.cpp)
 target_link_libraries( locoWattLight 
@@ -51,7 +51,6 @@ target_link_libraries( locoWattLight
         ${OPENSSL_SSL_LIBRARIES}
         ${OPENSSL_CRYPTO_LIBRARIES}
         ${CMAKE_DL_LIBS}
-        Wt::Wt 
         )
 
 add_custom_command(
