@@ -51,6 +51,8 @@ target_link_libraries( locoWattLight
         ${OPENSSL_SSL_LIBRARIES}
         ${OPENSSL_CRYPTO_LIBRARIES}
         ${CMAKE_DL_LIBS}
+        Wt::Wt 
+        Wt::WTHttp
         )
 
 add_custom_command(
