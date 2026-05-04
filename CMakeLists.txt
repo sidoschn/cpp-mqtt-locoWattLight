@@ -41,7 +41,7 @@ add_subdirectory(paho.mqtt.cpp)
 find_package(Threads)
 find_package(PahoMqttC)
 find_package(OpenSSL)
-find_package(WT COMPONENTS wthttp wt REQUIRED)
+find_package(WT COMPONENTS wt REQUIRED)
 
 add_executable(locoWattLight test02.cpp)
 target_link_libraries( locoWattLight 
@@ -52,7 +52,6 @@ target_link_libraries( locoWattLight
         ${OPENSSL_CRYPTO_LIBRARIES}
         ${CMAKE_DL_LIBS}
         Wt::Wt 
-        Wt::whtttp
         )
 
 add_custom_command(
