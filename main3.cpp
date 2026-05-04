@@ -306,7 +306,7 @@ HelloApplication::HelloApplication(const Wt::WEnvironment& env)
 
     button->clicked().connect(greet);
     button2->clicked().connect(stopServer);
-    button2->clicked().connect(sendMessage);
+    button3->clicked().connect(sendMessage);
 }
 
 
