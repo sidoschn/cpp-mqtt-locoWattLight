@@ -17,7 +17,8 @@
 
 
 int WEBSERVERPORT(8234);
-const std::string DFLT_SERVER_URI("mqtt://192.168.39:1883");
+//const std::string DFLT_SERVER_URI("mqtt://192.168.39:1883");
+const std::string DFLT_SERVER_URI("mqtt://127.0.0.1:1883");
 const std::string CLIENT_ID("cpp_publisher");
 const std::string TOPIC("cppTest/testTopic");
 // const std::string SUBTOPIC("cppTest/testTopic/set"); // legacy, the subtopics are populated in Main
