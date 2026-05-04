@@ -309,13 +309,6 @@ HelloApplication::HelloApplication(const Wt::WEnvironment& env)
     button2->clicked().connect(sendMessage);
 }
 
-int main(int argc, char **argv)
-{
-    
-}
-
-
-
 
 int main(int argc, char **argv)
 {
