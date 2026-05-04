@@ -43,7 +43,7 @@ find_package(PahoMqttC)
 find_package(OpenSSL)
 
 
-add_executable(locoWattLight main03.cpp)
+add_executable(locoWattLight main3.cpp)
 target_link_libraries( locoWattLight 
         ${CMAKE_THREAD_LIBS_INIT}
         ${PROJECT_SOURCE_DIR}/build/paho.mqtt.cpp/src/libpaho-mqttpp3.a
