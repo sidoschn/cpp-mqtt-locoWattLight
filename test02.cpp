@@ -25,10 +25,20 @@ HelloApplication::HelloApplication(const Wt::WEnvironment& env)
     Wt::WPushButton *button = root()->addNew<Wt::WPushButton>("Greet me.");
     root()->addNew<Wt::WBreak>();
     greeting_ = root()->addNew<Wt::WText>();
+    root()->addNew<Wt::WBreak>();
+
+    Wt::WPushButton *button2 = root()->addNew<Wt::WPushButton>("Force Stop Server");
+
     auto greet = [this]{
       greeting_->setText("Hello there, " + nameEdit_->text());
     };
+
+    auto stopServer = [this]{
+        exit;
+    };
+
     button->clicked().connect(greet);
+    button2->clicked().connect(stopServer);
 }
 
 int main(int argc, char **argv)
