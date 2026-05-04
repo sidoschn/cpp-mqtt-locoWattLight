@@ -34,7 +34,7 @@ HelloApplication::HelloApplication(const Wt::WEnvironment& env)
     };
 
     auto stopServer = [this]{
-        exit;
+        exit();
     };
 
     button->clicked().connect(greet);
