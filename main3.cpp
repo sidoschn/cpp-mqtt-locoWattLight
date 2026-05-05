@@ -14,6 +14,8 @@
 #include <Wt/WLineEdit.h>
 #include <Wt/WPushButton.h>
 #include <Wt/WText.h>
+#include <mqtt/async_client.h>
+#include <Wt/WTable.h>
 
 
 int WEBSERVERPORT(8234);
@@ -285,6 +287,25 @@ HelloApplication::HelloApplication(const Wt::WEnvironment& env)
     Wt::WPushButton *button2 = root()->addNew<Wt::WPushButton>("Force Stop WebServer");
     root()->addNew<Wt::WBreak>();
     Wt::WPushButton *button3 = root()->addNew<Wt::WPushButton>("SendMQTTtestMessage");
+    root()->addNew<Wt::WBreak>();
+    //auto tableOfSomeData = std::make_unique<Wt::WTable>();
+    auto tableOfSomeData = root()->addNew<Wt::WTable>();
+
+    //Wt::WTable tableOfData;
+
+    tableOfSomeData->setHeaderCount(1);
+    tableOfSomeData->setWidth(Wt::WLength("100%"));
+    tableOfSomeData->elementAt(0, 0)->addNew<Wt::WText>("#");
+    tableOfSomeData->elementAt(0, 1)->addNew<Wt::WText>("First Name");
+    tableOfSomeData->elementAt(0, 2)->addNew<Wt::WText>("Last Name");
+    tableOfSomeData->elementAt(0, 3)->addNew<Wt::WText>("Pay");
+
+    for (int i = 0; i < 3; i++)
+    {
+        tableOfSomeData->elementAt(1, i)->addNew<Wt::WText>(std::to_string(i));
+    }
+    
+    //root()->addWidget(*tableOfSomeData);
 
     auto greet = [this]{
       greeting_->setText("Hello there, " + nameEdit_->text());
@@ -293,6 +314,8 @@ HelloApplication::HelloApplication(const Wt::WEnvironment& env)
     auto stopServer = [this]{
         exit(0);
     };
+
+    
 
     auto sendMessage = [this]{
         std::string payload = "Hello, EMQX from C++!";
